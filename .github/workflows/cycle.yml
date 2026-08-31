@@ -34,6 +34,20 @@ jobs:
           sys.path.insert(0, "scripts")
           import state
 
+          # D5 GUARD, half two - checked FIRST and reported separately, so the
+          # operator gets the right diagnosis. Halting here, before installing
+          # anything or calling the model, is what stops a duplicate post.
+          try:
+              state.assert_no_pending_post()
+          except state.StateError as e:
+              print(f"::error title=Unreconciled post - REFUSING to post again::{e}")
+              print("A previous run created a post and never recorded its "
+                    "fb_post_id. Re-poll GET /v2/posts/{blotato_submission_id} "
+                    "for the id, write it into current_round.json, then delete "
+                    "queue/PENDING_POST.json. Every run halts until you do.",
+                    file=sys.stderr)
+              sys.exit(1)
+
           try:
               cfg = state.load_config()
               n = state.cadence_days(config=cfg)
@@ -68,6 +82,14 @@ jobs:
           npm install -g @anthropic-ai/claude-code
           pip install playwright
           python3 -m playwright install --with-deps chromium
+
+      # The conductor pushes its own breadcrumb mid-run (cycle.md Step 8a), so
+      # it needs a git identity before it starts.
+      - name: Configure git identity
+        if: steps.gate.outputs.due == 'true'
+        run: |
+          git config user.name "austin-beefs"
+          git config user.email "bot@users.noreply.github.com"
 
       - name: Run the cycle
         if: steps.gate.outputs.due == 'true'
@@ -135,3 +157,24 @@ jobs:
           done
           git diff --staged --quiet || git commit -m "cycle: $(date -u +%F)"
           git push
+
+      # D5 GUARD, half one (safety net). The conductor pushes the breadcrumb
+      # itself before posting (cycle.md Step 8a); this catches the case where it
+      # posted, then died before it could push. A breadcrumb left only on the
+      # runner's ephemeral disk is worthless - it must reach main, or the next
+      # run sees nothing and posts a DUPLICATE.
+      # [skip ci] keeps this push from waking publish-staged.yml (which watches
+      # queue/**). cycle.yml itself has no push trigger, so it cannot self-loop.
+      - name: Persist breadcrumb if the cycle failed mid-post
+        if: failure() && steps.gate.outputs.due == 'true' && steps.gate.outputs.auto == 'true'
+        run: |
+          if [ -f queue/PENDING_POST.json ]; then
+            git config user.name "austin-beefs"
+            git config user.email "bot@users.noreply.github.com"
+            git add queue/PENDING_POST.json
+            git diff --staged --quiet || git commit -m "cycle: FAILED mid-post, breadcrumb saved [skip ci]"
+            git push || true
+            echo "::error title=Cycle failed mid-post::A post may be LIVE but unrecorded. queue/PENDING_POST.json is on main and holds blotato_submission_id - re-poll GET /v2/posts/{id}, write the fb_post_id into current_round.json, then delete the breadcrumb. The next run will HALT until you do."
+          else
+            echo "Cycle failed before any post was attempted (no breadcrumb) - nothing live to reconcile."
+          fi

@@ -148,13 +148,9 @@ def prepare():
         return
     print(f"P0 guard passed: review phase, round {staged['round']} staged.")
 
-    # P1 - reconcile
-    if os.path.exists(BREADCRUMB):
-        halt("queue/PENDING_POST.json exists: a previous publish began an "
-             "irreversible post and never recorded it. A post may be LIVE with "
-             "no fb_post_id. Reconcile by hand (the breadcrumb holds the "
-             "blotato_submission_id - re-poll it), then delete the breadcrumb. "
-             "Never clear it automatically.")
+    # P1 - reconcile. Shared with the cycle workflow's gate: ONE implementation
+    # of the D5 rule, so the two paths cannot drift.
+    state.assert_no_pending_post()
     print("P1 reconcile: no breadcrumb.")
 
     # P2 - load

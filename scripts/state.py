@@ -187,6 +187,36 @@ def append_to_canon(entry, root=None):
 # cadence  (must agree with the gate in .github/workflows/cycle.yml)
 # ---------------------------------------------------------------------------
 
+PENDING_POST_FILE = os.path.join("queue", "PENDING_POST.json")
+
+
+def assert_no_pending_post(root=None):
+    """G6/D5: halt if an unreconciled post breadcrumb exists.
+
+    The breadcrumb is written (and PUSHED) before any irreversible post. If it
+    is still here, a previous run created a post and never recorded its
+    fb_post_id - so current_round.json still names the PREVIOUS post and the
+    cadence gate would happily post AGAIN, every run, forever. That is the
+    duplicate-post-forever failure, and it is why this halts instead of warning.
+
+    Recover by hand: the breadcrumb carries blotato_submission_id - re-poll
+    GET /v2/posts/{id} for the fb_post_id, write it into current_round.json,
+    then delete the breadcrumb. NEVER clear it automatically."""
+    path = os.path.join(root or ROOT, PENDING_POST_FILE)
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                crumb = json.load(f)
+            detail = (f"round={crumb.get('round')} "
+                      f"started_at={crumb.get('started_at')} "
+                      f"blotato_submission_id={crumb.get('blotato_submission_id')}")
+        except Exception:
+            detail = "(breadcrumb unreadable)"
+        halt(f"UNRECONCILED POST: {PENDING_POST_FILE} exists. A post may be LIVE "
+             f"on the Page with no fb_post_id recorded. {detail}. Reconcile by "
+             f"hand, then delete the breadcrumb. Refusing to post again.")
+
+
 def is_post_due(root=None, today=None):
     """True if >= cadence_days have passed since posted_at, or on cold start.
 

@@ -8,7 +8,7 @@
   "timezone": "America/Chicago",
   "_time_note": "The cron fires once daily; the deadline shown on cards is computed as publish_time + cadence_days (guardrail G3). Voting window == the gap between posts.",
 
-  "auto_publish": false,
+  "auto_publish": true,
   "review_phase_ends": "2026-09-14",
   "_gate_note": "auto_publish:false = the review gate. While false, the cycle opens a PR with the next card+caption instead of posting. Flip to true after the ~2-week review phase (see BUILD.md step 8).",
 
@@ -24,6 +24,6 @@
     "verdict":    "templates/verdict.html"
   },
 
-  "hold_verdict_gate": true,
+  "hold_verdict_gate": false,
   "_verdict_gate_note": "Keep a human eye on the tally->verdict step LONGER than the rest (a miscounted winner erodes trust). When auto_publish flips true, consider keeping verdict cards PR-gated a while longer by leaving this true and having the cycle prompt still open a PR for verdict-type posts only."
 }

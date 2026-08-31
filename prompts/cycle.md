@@ -139,9 +139,20 @@ post_for_real = config.auto_publish is True
   `current_round.json` into `queue/`. **Do not post. Do not write breadcrumb. Stop
   at Step 10-staged.**
 - **`post_for_real` True →** write `queue/PENDING_POST.json` **BEFORE** calling
-  `post_card()`: `{round, archetype, matchup, caption, png, started_at}`.
-  This is the only record that survives a crash between "post went live" and
-  "state written". Step 0 refuses to run again while it exists.
+  `post_card()`: `{round, archetype, matchup, caption, png, started_at}` — then
+  **COMMIT AND PUSH IT IMMEDIATELY**, before Step 9:
+
+  ```bash
+  git add queue/PENDING_POST.json
+  git commit -m "cycle: breadcrumb for round <N> [skip ci]"
+  git push
+  ```
+
+  A breadcrumb on the runner's ephemeral disk is **worthless** — the runner is
+  destroyed on failure and takes the file with it. It must reach `main`, or the
+  next run sees nothing, finds the cadence still open, and posts a DUPLICATE.
+  `[skip ci]` stops the push from waking `publish-staged.yml`.
+  The gate refuses to run again while this file exists.
 
 ### 9. POST + CAPTURE (code)
 `post_card.post_card(png, caption, page_id, blotato_account_id)`
