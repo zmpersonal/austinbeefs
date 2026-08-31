@@ -19,29 +19,39 @@ jobs:
         with: { ref: main }
 
       # --- CADENCE GATE: cheap check before spending any API budget ----------
+      # SINGLE SOURCE OF TRUTH: scripts/state.py. Do NOT re-implement the cadence
+      # or state-validity rules here. Two copies drift - and the drift we already
+      # hit was this gate swallowing a corrupt current_round.json and reporting a
+      # cold start, which would silently re-run Round 1 and lose the round
+      # history. state.is_post_due() halts on corrupt state; this step turns that
+      # halt into a hard job failure.
       - name: Is a post due today?
         id: gate
         run: |
+          set -euo pipefail
           python3 - <<'PY'
-          import json, os, datetime, pathlib
-          cfg = json.load(open("config.json"))
-          n = int(cfg.get("cadence_days", 3))
-          due = True
-          last = None
-          state = pathlib.Path("current_round.json")
-          if state.exists():
-              try:
-                  cr = json.load(open(state))
-                  last = cr.get("posted_at")  # ISO date string, set at step 10
-              except Exception:
-                  pass
-          if last:
-              d_last = datetime.date.fromisoformat(last[:10])
-              days = (datetime.date.today() - d_last).days
-              due = days >= n
-              print(f"last post {last[:10]} ({days}d ago); cadence {n}d; due={due}")
+          import os, sys
+          sys.path.insert(0, "scripts")
+          import state
+
+          try:
+              cfg = state.load_config()
+              n = state.cadence_days(config=cfg)
+              cr = state.read_current_round()     # halts if present-but-broken
+              due = state.is_post_due()
+          except state.StateError as e:
+              print(f"::error title=Corrupt Austin Beefs state::{e}")
+              print("Refusing to continue. A corrupt state file is NOT a cold "
+                    "start - continuing would re-run Round 1 and lose the round "
+                    "history. Fix or deliberately delete the file.", file=sys.stderr)
+              sys.exit(1)
+
+          if cr is None:
+              print(f"no current_round.json -> cold start, due=True (cadence {n}d)")
           else:
-              print("no prior post recorded -> first run, due=True")
+              print(f"round {cr.get('round')} posted {str(cr.get('posted_at'))[:10]}; "
+                    f"cadence {n}d; due={due}")
+
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"due={'true' if due else 'false'}\n")
           PY
