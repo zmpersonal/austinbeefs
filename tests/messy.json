@@ -1,0 +1,15 @@
+[
+  {"id": "m1",  "from": {"name": "Luz", "id": "u1"}, "message": "Both are solid, but Veracruz edges it for me"},
+  {"id": "m2",  "from": {"name": "Luz", "id": "u1"}, "message": "veracruz"},
+  {"id": "m3",  "from": {"name": "Luz", "id": "u1"}, "message": "VERACRUZ!!! come on people"},
+  {"id": "m4",  "from": {"name": "Gabe", "id": "u2"}, "message": "pv over veracruz, fight me"},
+  {"id": "m5",  "from": {"name": "Sione", "id": "u3"}, "message": "Nixta is better than both of these and it's not close"},
+  {"id": "m6",  "from": null, "message": "cuantos tacos >>>>"},
+  {"id": "m7",  "from": {"name": "Ash", "id": "u4"}, "message": "nixta all day"},
+  {"id": "m8",  "from": null, "message": "does anyone know if the 35 construction is done yet"},
+  {"id": "m9",  "from": {"name": "Ren", "id": "u5"}, "message": "tagging @kevin he has OPINIONS"},
+  {"id": "m10", "from": {"name": "Bex", "id": "u6"}, "message": "P. Terry's breakfast taco is a dark horse honestly"},
+  {"id": "m11", "from": {"name": "Tio", "id": "u7"}, "message": "pueblo viejo, no contest"},
+  {"id": "m12", "from": null, "message": "veracruz and pueblo viejo are both overrated"},
+  {"id": "m13", "from": {"name": "Kass", "id": "u8"}, "message": "vera cruz for the migas, pv for the salsa. can't pick"}
+]

@@ -1,0 +1,5 @@
+[
+  {"id": "n1", "from": {"name": "Only Commenter", "id": "u1"}, "message": "veracruz i guess"},
+  {"id": "n2", "from": null, "message": "first"},
+  {"id": "n3", "from": {"name": "Pat", "id": "u2"}, "message": "pueblo viejo"}
+]
