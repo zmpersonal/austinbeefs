@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: verdict.html  (archetype: verdict — RESULTS card; reveals last round's winner)
+  DISTINCT COLORWAY ON PURPOSE: verdict cards are CHARCOAL + GOLD ("champion's plaque"),
+  NOT orange. Brand rule: ORANGE = a fight is live, go vote.  CHARCOAL/GOLD = results are in.
+  This lets the feed be read at a glance. Do not make verdict cards orange.
+  SLOTS:
+    {{BRAND_TAG}}    top-right marker tag. e.g. "round 13 · results"
+    {{BANNER}}       top banner. e.g. "🏆 THE PEOPLE HAVE RULED"
+    {{WINNER_LABEL}} explains what the name IS. e.g. "AUSTIN CROWNED YOUR BEST BREAKFAST TACO:"
+    {{CUP}}          one emoji. e.g. "🌮"
+    {{CHAMP_EM}}     winner line 1 (gold). e.g. "Veracruz"
+    {{CHAMP_REST}}   winner line 2 (white). e.g. "All Natural"  (leave "" if one line)
+    {{SCRAWL}}       gold-pill marker line. keep < ~34 chars. e.g. "y'all showed up 🙌"
+    {{NEXT_MATCHUP}} the NEW fight this same post opens. e.g. "FRANKLIN vs LA BARBECUE"
+    {{NEXT_DEADLINE}} computed by code (G3). e.g. "MON 6PM"
+  NOTE: verdict is LOUD but carries NO vote counts (G2). The scoreboard points to the NEXT
+  round (this post opens it) — never "re-vote" the settled matchup.
+-->
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#C4560B;--orange-deep:#9E3F04;--char:#171009;--char-2:#241a10;--bone:#F7EFE1;--gold:#FFB020}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1080px;overflow:hidden;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+  .card{position:relative;width:1080px;height:1080px;background:var(--char)}
+  /* brandbar inverts for results: gold bar so it's obviously a different card type */
+  .brandbar{position:absolute;top:0;left:0;right:0;height:96px;background:var(--gold);display:flex;align-items:center;justify-content:space-between;padding:0 46px;z-index:6;border-bottom:4px solid var(--char)}
+  .logo{font-family:'Anton',sans-serif;font-size:46px;text-transform:uppercase;letter-spacing:1px;color:var(--char)}
+  .logo em{color:#fff;font-style:normal;-webkit-text-stroke:2px var(--char)}
+  .tag{font-family:'Permanent Marker',cursive;font-size:20px;color:var(--char);transform:rotate(-2deg)}
+  .stage{position:absolute;top:96px;left:0;right:0;bottom:150px;background:var(--char);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:56px;overflow:hidden}
+  .stage:before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 42%,rgba(255,176,32,.10) 0deg 12deg,transparent 12deg 24deg);pointer-events:none}
+  .banner{font-weight:900;letter-spacing:.18em;text-transform:uppercase;font-size:30px;color:var(--gold);z-index:2}
+  .cup{font-size:96px;z-index:2;line-height:1;margin:2px 0}
+  .wlabel{font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:23px;color:var(--bone);opacity:.85;max-width:820px;line-height:1.25;margin-bottom:6px;z-index:2}
+  .champ{font-family:'Anton',sans-serif;font-size:118px;line-height:.86;text-transform:uppercase;color:#fff;margin-bottom:6px;z-index:2}
+  .champ em{color:var(--gold);font-style:normal}
+  .scrawl{font-family:'Permanent Marker',cursive;font-size:38px;color:var(--char);background:var(--gold);padding:6px 22px;border-radius:40px;display:inline-block;transform:rotate(-2deg);margin-top:14px;z-index:2;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+  .score{position:absolute;left:0;right:0;bottom:0;height:150px;background:var(--orange);z-index:6;display:flex;border-top:4px solid var(--gold)}
+  .half{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 46px}
+  .half+.half{border-left:2px dashed rgba(0,0,0,.3)}
+  .lab{font-weight:900;font-size:20px;letter-spacing:.12em;color:var(--char);text-transform:uppercase;margin-bottom:8px}
+  .val{font-family:'Anton',sans-serif;font-size:34px;text-transform:uppercase;color:#fff;line-height:.98;text-shadow:2px 2px 0 var(--orange-deep)}
+</style></head>
+<body><div class="card">
+  <div class="brandbar"><div class="logo">AUSTIN <em>BEEFS</em></div><div class="tag">{{BRAND_TAG}}</div></div>
+  <div class="stage">
+    <div class="banner">{{BANNER}}</div>
+    <div class="cup">{{CUP}}</div>
+    <div class="wlabel">{{WINNER_LABEL}}</div>
+    <div class="champ"><em>{{CHAMP_EM}}</em><br>{{CHAMP_REST}}</div>
+    <div class="scrawl">{{SCRAWL}}</div>
+  </div>
+  <div class="score">
+    <div class="half"><div class="lab">🥊 next fight is LIVE</div><div class="val">{{NEXT_MATCHUP}}</div></div>
+    <div class="half"><div class="lab">⏰ vote by</div><div class="val">{{NEXT_DEADLINE}}</div></div>
+  </div>
+</div></body></html>

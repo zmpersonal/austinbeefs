@@ -1,0 +1,105 @@
+name: cycle
+# One workflow = one full Austin Beefs cycle (CLAUDE.md Step 1-10).
+# It runs DAILY but exits early unless it's been >= cadence_days since the last
+# post. To change frequency, edit cadence_days in config.json - nothing here.
+
+on:
+  schedule:
+    - cron: '0 22 * * *'    # 22:00 UTC daily (~17:00 America/Chicago). Adjust as needed.
+  workflow_dispatch:         # lets you run it by hand for testing
+
+jobs:
+  cycle:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+
+      # --- CADENCE GATE: cheap check before spending any API budget ----------
+      - name: Is a post due today?
+        id: gate
+        run: |
+          python3 - <<'PY'
+          import json, os, datetime, pathlib
+          cfg = json.load(open("config.json"))
+          n = int(cfg.get("cadence_days", 3))
+          due = True
+          last = None
+          state = pathlib.Path("current_round.json")
+          if state.exists():
+              try:
+                  cr = json.load(open(state))
+                  last = cr.get("posted_at")  # ISO date string, set at step 10
+              except Exception:
+                  pass
+          if last:
+              d_last = datetime.date.fromisoformat(last[:10])
+              days = (datetime.date.today() - d_last).days
+              due = days >= n
+              print(f"last post {last[:10]} ({days}d ago); cadence {n}d; due={due}")
+          else:
+              print("no prior post recorded -> first run, due=True")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"due={'true' if due else 'false'}\n")
+          PY
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.due == 'true'
+        with: { node-version: '20' }
+
+      - name: Install Claude Code + Playwright (for the render step)
+        if: steps.gate.outputs.due == 'true'
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          pip install playwright
+          python3 -m playwright install --with-deps chromium
+
+      - name: Run the cycle
+        if: steps.gate.outputs.due == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BLOTATO_API_KEY:   ${{ secrets.BLOTATO_API_KEY }}
+          FB_PAGE_TOKEN:     ${{ secrets.FB_PAGE_TOKEN }}
+          FB_PAGE_ID:        ${{ secrets.FB_PAGE_ID }}
+        run: |
+          claude -p "$(cat prompts/cycle.md)" \
+            --mcp-config .mcp.json \
+            --dangerously-skip-permissions
+
+      # --- REVIEW PHASE: open a PR instead of committing (while auto_publish:false)
+      # The cycle prompt itself decides whether it already posted (auto) or just
+      # staged files (review). If it staged a next-card for approval, this opens
+      # the PR. Once auto_publish:true, the cycle commits directly and this PR
+      # step simply finds nothing to open.
+      - name: Open review PR (if anything staged)
+        if: steps.gate.outputs.due == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: cycle/${{ github.run_id }}
+          title: "Austin Beefs - next card for review"
+          body: |
+            The next card + caption are staged here. Merge to approve & post,
+            close to skip. Edit the caption file before merging to tweak wording.
+            (Verdict cards especially: sanity-check the tallied winner.)
+          add-paths: |
+            queue/
+            current_round.json
+            canon.json
+
+      # --- AUTONOMOUS PHASE: once auto_publish:true, persist state directly ---
+      - name: Commit state (autonomous phase only)
+        if: steps.gate.outputs.due == 'true'
+        run: |
+          AUTO=$(python3 -c "import json;print(json.load(open('config.json')).get('auto_publish'))")
+          if [ "$AUTO" = "True" ]; then
+            git config user.name "austin-beefs"
+            git config user.email "bot@users.noreply.github.com"
+            git add current_round.json canon.json queue/ published/ reference_bank.json reports/ || true
+            git diff --staged --quiet || git commit -m "cycle: $(date -u +%F)"
+            git push
+          else
+            echo "review phase (auto_publish:false) - state changes go via the PR above."
+          fi

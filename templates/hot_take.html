@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: hot_take.html  (archetype: hot_take — deliberately, gloriously wrong)
+  SLOTS:
+    {{BRAND_TAG}}    top-right marker tag. e.g. "🎤 mic drop"
+    {{EYEBROW}}      small label above the claim. e.g. "unpopular opinion incoming"
+    {{CLAIM}}        the take, screamed. TASTE ONLY, never a factual/closure claim (G4). May contain <br>.
+    {{SCRAWL}}       gold marker sign-off. e.g. "there. i said it. 🎤⬇️"
+    {{STAMP}}        rotated stamp text. e.g. "GOT BEEF?"
+    {{VOTE_VALUE}}   e.g. "Tell me why<br>I'm wrong"
+    {{DEADLINE}}     computed by code (G3). e.g. "FRI 6PM"
+  NOTE: keep CLAIM to roughly <= 46 chars per line so it doesn't overflow at 112px.
+-->
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#C4560B;--orange-deep:#9E3F04;--char:#171009;--bone:#F7EFE1;--gold:#FFB020}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1080px;overflow:hidden;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+  .card{position:relative;width:1080px;height:1080px;background:var(--bone)}
+  .brandbar{position:absolute;top:0;left:0;right:0;height:96px;background:var(--char);display:flex;align-items:center;justify-content:space-between;padding:0 46px;z-index:6;border-bottom:4px solid var(--gold)}
+  .logo{font-family:'Anton',sans-serif;font-size:46px;text-transform:uppercase;letter-spacing:1px;color:var(--bone)}
+  .logo em{color:var(--orange);font-style:normal}
+  .tag{font-family:'Permanent Marker',cursive;font-size:20px;color:var(--gold);transform:rotate(-2deg)}
+  .stage{position:absolute;top:96px;left:0;right:0;bottom:150px;background:var(--orange);display:flex;flex-direction:column;justify-content:center;padding:80px 74px;overflow:hidden}
+  .stage:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 22% 18%,rgba(255,255,255,.16),transparent 42%);pointer-events:none}
+  .ey{font-weight:900;letter-spacing:.2em;text-transform:uppercase;font-size:24px;color:var(--char);margin-bottom:26px}
+  .claim{font-family:'Anton',sans-serif;font-size:108px;line-height:.9;text-transform:uppercase;color:#fff;text-shadow:5px 5px 0 var(--orange-deep)}
+  .scrawl{font-family:'Permanent Marker',cursive;font-size:50px;color:var(--gold);transform:rotate(-3deg);margin-top:34px}
+  .stamp{position:absolute;top:130px;right:54px;font-family:'Anton',sans-serif;text-transform:uppercase;border:5px solid #fff;color:#fff;padding:6px 16px 3px;font-size:34px;letter-spacing:1px;transform:rotate(9deg);border-radius:8px;opacity:.92;z-index:7}
+  .score{position:absolute;left:0;right:0;bottom:0;height:150px;background:var(--char);z-index:6;display:flex;border-top:4px solid var(--gold)}
+  .half{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 46px}
+  .half+.half{border-left:2px dashed #4a3826}
+  .lab{font-weight:900;font-size:20px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+  .val{font-family:'Anton',sans-serif;font-size:38px;text-transform:uppercase;color:var(--bone);line-height:.95}
+</style></head>
+<body><div class="card">
+  <div class="brandbar"><div class="logo">AUSTIN <em>BEEFS</em></div><div class="tag">{{BRAND_TAG}}</div></div>
+  <div class="stage">
+    <div class="ey">{{EYEBROW}}</div>
+    <div class="claim">{{CLAIM}}</div>
+    <div class="scrawl">{{SCRAWL}}</div>
+    <div class="stamp">{{STAMP}}</div>
+  </div>
+  <div class="score">
+    <div class="half"><div class="lab">😤 come at me</div><div class="val">{{VOTE_VALUE}}</div></div>
+    <div class="half"><div class="lab">⏰ closes</div><div class="val">{{DEADLINE}}</div></div>
+  </div>
+</div></body></html>

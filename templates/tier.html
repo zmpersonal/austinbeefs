@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: tier.html  (archetype: tier_list — rage by placement)
+  SLOTS:
+    {{BRAND_TAG}}    top-right marker tag. e.g. "official*"
+    {{TITLE_1}}      title line 1. e.g. "ATX Neighborhoods"
+    {{TITLE_2}}      title line 2 (orange emphasis). e.g. "the OFFICIAL ranking"
+    {{ITEMS_S}}..{{ITEMS_F}}   comma-separated items for each row. Keep short (fits one line, ~28 chars).
+                     Put the SACRED COW in a low row (F/C) to detonate the comments.
+    {{VOTE_VALUE}}   e.g. "Fix it in<br>the comments"
+    {{DEADLINE}}     computed by code (G3). e.g. "FRI 6PM"
+  Leave a row's items slot empty ("") if you want fewer than 5 tiers.
+-->
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#C4560B;--char:#171009;--bone:#F7EFE1;--gold:#FFB020}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1080px;overflow:hidden;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+  .card{position:relative;width:1080px;height:1080px;background:var(--bone)}
+  .brandbar{position:absolute;top:0;left:0;right:0;height:96px;background:var(--char);display:flex;align-items:center;justify-content:space-between;padding:0 46px;z-index:6;border-bottom:4px solid var(--gold)}
+  .logo{font-family:'Anton',sans-serif;font-size:46px;text-transform:uppercase;letter-spacing:1px;color:var(--bone)}
+  .logo em{color:var(--orange);font-style:normal}
+  .tag{font-family:'Permanent Marker',cursive;font-size:20px;color:var(--gold);transform:rotate(-2deg)}
+  .stage{position:absolute;top:96px;left:0;right:0;bottom:150px;padding:30px 46px;display:flex;flex-direction:column}
+  .title{font-family:'Anton',sans-serif;font-size:54px;text-transform:uppercase;color:var(--char);line-height:.9}
+  .title em{color:var(--orange);font-style:normal}
+  .rows{flex:1;display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .row{flex:1;display:flex;align-items:center;background:#fff;border:3px solid var(--char);border-radius:12px;overflow:hidden}
+  .row.empty{display:none}
+  .grade{width:110px;align-self:stretch;display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:58px;color:#fff}
+  .g-s{background:#E23B2E}.g-a{background:var(--orange)}.g-b{background:var(--gold);color:var(--char)}.g-c{background:#5b6b3a}.g-f{background:#3a2a1a}
+  .items{padding:0 22px;font-weight:900;font-size:28px;color:var(--char)}
+  .score{position:absolute;left:0;right:0;bottom:0;height:150px;background:var(--char);z-index:6;display:flex;border-top:4px solid var(--gold)}
+  .half{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 46px}
+  .half+.half{border-left:2px dashed #4a3826}
+  .lab{font-weight:900;font-size:20px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+  .val{font-family:'Anton',sans-serif;font-size:38px;text-transform:uppercase;color:var(--bone);line-height:.95}
+</style></head>
+<body><div class="card">
+  <div class="brandbar"><div class="logo">AUSTIN <em>BEEFS</em></div><div class="tag">{{BRAND_TAG}}</div></div>
+  <div class="stage">
+    <div class="title">{{TITLE_1}}<br><em>{{TITLE_2}}</em></div>
+    <div class="rows">
+      <div class="row"><div class="grade g-s">S</div><div class="items">{{ITEMS_S}}</div></div>
+      <div class="row"><div class="grade g-a">A</div><div class="items">{{ITEMS_A}}</div></div>
+      <div class="row"><div class="grade g-b">B</div><div class="items">{{ITEMS_B}}</div></div>
+      <div class="row"><div class="grade g-c">C</div><div class="items">{{ITEMS_C}}</div></div>
+      <div class="row"><div class="grade g-f">F</div><div class="items">{{ITEMS_F}}</div></div>
+    </div>
+  </div>
+  <div class="score">
+    <div class="half"><div class="lab">🗣️ fight me</div><div class="val">{{VOTE_VALUE}}</div></div>
+    <div class="half"><div class="lab">⏰ closes</div><div class="val">{{DEADLINE}}</div></div>
+  </div>
+</div></body></html>

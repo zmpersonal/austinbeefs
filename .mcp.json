@@ -1,0 +1,13 @@
+{
+  "_comment": "Blotato MCP for the POSTING step only. Get the exact hosted URL from help.blotato.com/api/mcp - do not guess it. Comment-READING is NOT here; that's the Graph API (see scripts/prove_graph_comments.py).",
+  "mcpServers": {
+    "blotato": {
+      "type": "http",
+      "url": "PASTE_HOSTED_MCP_URL_HERE",
+      "headers": {
+        "blotato-api-key": "${BLOTATO_API_KEY}"
+      }
+    }
+  },
+  "_fallback": "If MCP auth is fiddly in CI, skip this file and have the cycle prompt curl the REST API at https://backend.blotato.com/v2 with header blotato-api-key directly (same surface, fewer moving parts). prove_blotato_post.py already uses the REST path so you'll have confirmed it works."
+}

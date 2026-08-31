@@ -1,0 +1,29 @@
+{
+  "_comment": "Runtime config for the Austin Beefs cycle. Change cadence_days to change how often it posts - that's the only knob you need.",
+
+  "cadence_days": 3,
+  "_cadence_note": "Post one card every N days. Set to 2 for every-other-day, 3 for every third day, etc. The workflow runs DAILY but exits early unless it's been >= cadence_days since the last post (see .github/workflows/cycle.yml). This beats a raw cron interval because 'every 3 days' via cron drifts across month boundaries; the day-gate does not.",
+
+  "post_time_local": "17:00",
+  "timezone": "America/Chicago",
+  "_time_note": "The cron fires once daily; the deadline shown on cards is computed as publish_time + cadence_days (guardrail G3). Voting window == the gap between posts.",
+
+  "auto_publish": false,
+  "review_phase_ends": "2026-09-14",
+  "_gate_note": "auto_publish:false = the review gate. While false, the cycle opens a PR with the next card+caption instead of posting. Flip to true after the ~2-week review phase (see BUILD.md step 8).",
+
+  "page_id": "YOUR_FB_PAGE_ID",
+  "blotato_fb_account_id": "YOUR_BLOTATO_ACCOUNT_ID",
+  "reference_bank": "reference_bank.json",
+
+  "template_map": {
+    "open_floor": "templates/open_floor.html",
+    "matchup":    "templates/vs.html",
+    "tier_list":  "templates/tier.html",
+    "hot_take":   "templates/hot_take.html",
+    "verdict":    "templates/verdict.html"
+  },
+
+  "hold_verdict_gate": true,
+  "_verdict_gate_note": "Keep a human eye on the tally->verdict step LONGER than the rest (a miscounted winner erodes trust). When auto_publish flips true, consider keeping verdict cards PR-gated a while longer by leaving this true and having the cycle prompt still open a PR for verdict-type posts only."
+}

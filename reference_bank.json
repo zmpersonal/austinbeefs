@@ -1,0 +1,231 @@
+{
+  "_meta": {
+    "version": "2.0-research-merged",
+    "purpose": "The locked debate material. The engine picks matchups/tiers/takes ONLY from this file (guardrail G1). It never invents Austin references at runtime.",
+    "provenance": "Merged from Perplexity status-check pass + Manus evergreen bank (research dated ~Aug 2026). Where the two disagreed, Perplexity's open/closed verdict wins.",
+    "tagging": {
+      "status": "confirmed_open = a recent source lists current operation | closed = verified closed, DO NOT POST | unconfirmed = likely open but not verified to standard, VERIFY before posting",
+      "recurrence": "evidenced = Perplexity found real recent threads of people arguing it | plausible_unverified = Manus-listed, culturally plausible but NOT confirmed as a recurring fight. Quarantined: usable, but deprioritize until a comment section proves it's live.",
+      "used": "set true after posting so it isn't repeated"
+    },
+    "engine_rules_reminder": [
+      "NEVER post anything status:closed (G4/G5).",
+      "NEVER post status:unconfirmed without verifying open TODAY.",
+      "PREFER recurrence:evidenced + status:confirmed_open for early rounds (strongest, safest).",
+      "plausible_unverified is fine to use, but treat early results as a test of whether that fight is real; harvest what lands.",
+      "Provocation on TASTE only, never on facts, closures, or attribution (G4)."
+    ],
+    "critical_corrections_from_research": [
+      "Valentina's Tex Mex BBQ is CLOSED. Removed from all matchups.",
+      "Vaquero Taquero: OPEN at North Campus (104 E 31st); old downtown Sabine location closed -> became Taco N Maiz.",
+      "P. Terry's: OPEN and expanded 24hr; the Capital Plaza / I-35 flagship closed. Nostalgia must say 'Cap Plaza P. Terry's', never 'P. Terry's is gone'.",
+      "Amy's, Lick, Home Slice, Via 313: status unconfirmed - verify before posting."
+    ]
+  },
+
+  "round_1_launch": {
+    "fixed": true,
+    "archetype": "open_floor",
+    "template": "hot_take.html (question in the big-text slot, not a take)",
+    "question": "What's Austin's best breakfast taco place?",
+    "big_text": "AUSTIN'S BEST BREAKFAST TACO?",
+    "how_to_vote": "Name your spot in the comments.",
+    "no_verdict_half": true,
+    "why": "Open-floor launch = everyone has a pick (max reach) AND nominations seed every future taco matchup. The 'best breakfast taco canon' is a CONFIRMED recurring Austin debate (evidenced).",
+    "verified_contender_pool": ["Veracruz All Natural", "Juan in a Million", "Joe's Bakery", "Rosita's Al Pastor", "Cisco's", "Vaquero Taquero (North Campus)", "Nixta Taqueria", "Cuantos Tacos", "Pueblo Viejo", "Tacodeli"],
+    "post_run_action": "After tallying R1, promote the top ~8 named spots into head-to-head matchups for future rounds."
+  },
+
+  "matchups": {
+    "breakfast_tacos": [
+      {"a": "Veracruz All Natural", "b": "Pueblo Viejo", "prompt": "Migas benchmark vs stronger-flavor/salsa case", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/austinfood Jan 2026 'Pueblo Viejo vs Veracruz All Natural'", "used": false},
+      {"a": "Veracruz All Natural", "b": "Tacodeli", "prompt": "Migas royalty vs the citywide baseline (the Cowboy)", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/austinfood; recurring in guides", "used": false},
+      {"a": "Veracruz All Natural", "b": "Vaquero Taquero (North Campus)", "prompt": "Fresh/bright vs greasy/charred - which has more repeat value", "status": "confirmed_open", "recurrence": "plausible_unverified", "source": "Manus; not confirmed as a recurring named head-to-head", "used": false},
+      {"a": "Juan in a Million", "b": "Joe's Bakery", "prompt": "The Don Juan vs old-school East Austin institution", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/austinfood Sep 2025 favorite-breakfast-taco thread", "used": false},
+      {"a": "Torchy's Tacos", "b": "Cuantos Tacos", "prompt": "$7-a-taco chain vs Michelin-nod street tacos - is Torchy's still worth it", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/austinfood Jan 2026 'why is Torchys taco outrageously expensive'", "used": false},
+      {"a": "Cuantos Tacos", "b": "Las Trancas", "prompt": "Michelin-acclaim vs the local value pick", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/austinfood Feb 2026 recap ('Cuantos a bit overrated')", "used": false, "note": "Verify Las Trancas status/location before posting."},
+      {"a": "Rosita's Al Pastor", "b": "Cisco's", "prompt": "Al-pastor trailer vs the 1950 breakfast-taco institution", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Nixta Taqueria", "b": "Cuantos Tacos", "prompt": "Chef-driven sit-down ($6-13) vs street-taco purity ($2-3.50)", "status": "confirmed_open", "recurrence": "evidenced", "source": "price/style split documented in 2026 taco guides", "used": false}
+    ],
+    "bbq": [
+      {"a": "Franklin Barbecue", "b": "la Barbecue", "prompt": "Classic brisket precision vs swagger and sides", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/austinfood + atxfyi May 2026 BBQ guide", "used": false},
+      {"a": "Franklin Barbecue", "b": "Terry Black's", "prompt": "Worth-the-line pilgrimage vs easier downtown access", "status": "confirmed_open", "recurrence": "evidenced", "used": false},
+      {"a": "la Barbecue", "b": "Interstellar BBQ", "prompt": "Old-school credibility vs newer-menu ambition", "status": "confirmed_open", "recurrence": "evidenced", "used": false},
+      {"a": "LeRoy and Lewis", "b": "Franklin Barbecue", "prompt": "Modern whole-animal thinking vs brisket orthodoxy", "status": "confirmed_open", "recurrence": "evidenced", "used": false},
+      {"a": "Terry Black's", "b": "Interstellar BBQ", "prompt": "Downtown tradition vs the northwest destination", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false}
+    ],
+    "tex_mex": [
+      {"a": "Matt's El Rancho", "b": "Chuy's", "prompt": "Big-room Austin Tex-Mex ritual vs kitschy consistency", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false, "note": "Verify locations."},
+      {"a": "Suerte", "b": "Nixta Taqueria", "prompt": "Chef-driven masa vs playful taqueria creativity", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Matt's El Rancho", "b": "El Patio", "prompt": "Queso-and-margarita classic vs the cheese-and-plate classic", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false, "note": "sacred-cow bait: Bob Armstrong dip"},
+      {"a": "De Nada", "b": "Sour Duck Market", "prompt": "Casual taco-and-drink stop vs all-day creative comfort", "status": "unconfirmed", "recurrence": "evidenced", "source": "r/austinfood Jan 2026 called De Nada overrated", "used": false}
+    ],
+    "pizza_burgers_other": [
+      {"a": "Home Slice Pizza", "b": "Via 313", "prompt": "Perfect NY-ish slice vs Detroit-style indulgence", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false, "note": "Verify both before posting."},
+      {"a": "JewBoy Burgers", "b": "Dan's Hamburgers", "prompt": "Loaded modern burger vs Austin old-school simplicity", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false, "note": "Dan's Airport location closed for rebuild - NOT permanently closed."},
+      {"a": "Uchi", "b": "Uchiko", "prompt": "The original special-occasion room vs the livelier sibling", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false}
+    ],
+    "coffee": [
+      {"a": "Figure 8", "b": "Houndstooth", "prompt": "Coffee-nerd precision vs dependable local institution (seating debate)", "status": "confirmed_open", "recurrence": "plausible_unverified", "source": "Perplexity: coffee rivalries NOT verified as recurring", "used": false},
+      {"a": "Radio Coffee & Beer", "b": "Cosmic Saltillo", "prompt": "All-day patio hang vs elaborate destination campus", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Merit Coffee", "b": "Caffe Medici", "prompt": "Modern specialty polish vs the Austin classic", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false}
+    ],
+    "neighborhoods_and_suburbs": [
+      {"a": "Hyde Park", "b": "Cherrywood", "prompt": "Best central neighborhood for actual daily life", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Round Rock", "b": "Cedar Park", "prompt": "North-suburb supremacy - value/jobs vs family-suburb feel", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false, "note": "Big commuter audience."},
+      {"a": "Travis Heights", "b": "South Congress", "prompt": "Historic residential calm vs retail-and-restaurant energy", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Buda", "b": "Kyle", "prompt": "Small-town feel vs bigger-suburb amenities", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false}
+    ],
+    "roads": [
+      {"a": "I-35", "b": "MoPac (Loop 1)", "prompt": "Which is worse when you actually have somewhere to be", "status": "confirmed_open", "recurrence": "evidenced", "source": "KUT + recurring r/Austin trigger threads", "used": false, "note": "Highest-reach category - everyone commutes."},
+      {"a": "US 290", "b": "SH 71 (Ben White)", "prompt": "West/south bottleneck champion", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "183", "b": "MoPac (Loop 1)", "prompt": "North-south freeway stress test", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "360/2222 interchange", "b": "360/MoPac interchange", "prompt": "Which merge deserves its own support group", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false}
+    ],
+    "swimming_holes": [
+      {"a": "Barton Springs", "b": "Deep Eddy", "prompt": "Natural-spring icon vs the better actual afternoon", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Hamilton Pool", "b": "Krause Springs", "prompt": "Reservation-heavy landmark vs spring-fed family escape", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false, "note": "Verify reservations/water/algae/access before posting."},
+      {"a": "Sculpture Falls", "b": "Twin Falls", "prompt": "Best Greenbelt payoff", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false, "note": "Verify water conditions."}
+    ],
+    "nightlife_districts": [
+      {"a": "Rainey Street", "b": "East 6th", "prompt": "Patio-crawl convenience vs actual bar character", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Red River", "b": "East 6th", "prompt": "Venue density vs bar-hopping chaos", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "East 6th", "b": "West 6th", "prompt": "Local dive energy vs cocktail-and-college energy", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false}
+    ],
+    "music_venues": [
+      {"a": "The Continental Club", "b": "Antone's", "prompt": "South Congress institution vs downtown blues history", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false, "note": "Verify schedules/ownership."},
+      {"a": "Mohawk", "b": "Empire Control Room", "prompt": "Best Red River room", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false},
+      {"a": "The White Horse", "b": "Broken Spoke", "prompt": "East-side honky-tonk energy vs Texas dance-hall legacy", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false}
+    ],
+    "heb_hierarchy": [
+      {"a": "Lake Austin H-E-B", "b": "Central Market North", "prompt": "Most luxurious grocery run", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Mueller H-E-B", "b": "Hancock H-E-B", "prompt": "Modern neighborhood store vs old-school central convenience", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/Austin uses store-by-intersection naming heavily", "used": false},
+      {"a": "Parmer & MoPac H-E-B", "b": "Slaughter & Manchaca H-E-B", "prompt": "Which store has the most personality", "status": "confirmed_open", "recurrence": "evidenced", "source": "r/Austin store-shorthand threads", "used": false}
+    ],
+    "texas_chains": [
+      {"a": "P. Terry's", "b": "Whataburger", "prompt": "Austin simplicity vs Texas nostalgia/customization", "status": "confirmed_open", "recurrence": "evidenced", "source": "recurring r/AustinFood; NUCLEAR + statewide reach", "used": false},
+      {"a": "Whataburger", "b": "In-N-Out", "prompt": "Texas identity vs West Coast cult consistency", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false, "note": "Statewide beef - big reach."},
+      {"a": "Kerbey Lane Cafe", "b": "Magnolia Cafe", "prompt": "Pancake-and-brunch consistency vs late-night Austin mythology", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false},
+      {"a": "Amy's Ice Creams", "b": "Lick Honest Ice Creams", "prompt": "Playful local scoop energy vs composed flavors", "status": "unconfirmed", "recurrence": "plausible_unverified", "used": false}
+    ]
+  },
+
+  "debate_axes": {
+    "note": "Perplexity found PRICE/VALUE is currently the strongest recurring food-argument axis. It attaches to any spot without calling it 'bad' (G4-safe). Use as a framing overlay on matchups or as standalone hot takes.",
+    "price_value": {
+      "recurrence": "evidenced",
+      "source": "multiple r/austinfood 2026 threads: $7 Torchy's taco, $18 Domain lunch, 'is Austin food overpriced'",
+      "prompts": [
+        "Which Austin spot is worth every penny - and which one is charging you for the 'experience'?",
+        "$7 for one Torchy's taco. Defensible or delusional?",
+        "Name the Austin meal that's secretly the best value in town."
+      ]
+    }
+  },
+
+  "tier_pools": [
+    {"category": "Breakfast taco spots", "items": ["Veracruz", "Vaquero Taquero", "Juan in a Million", "Tacodeli", "Torchy's", "Rosita's Al Pastor", "Joe's Bakery", "Cisco's", "Pueblo Viejo", "Cuantos"], "sacred_cow": "Veracruz (place it below A and comments litigate migas/tortillas/lines/'tourist favorite')", "status": "confirmed_open", "recurrence": "evidenced", "used": false},
+    {"category": "BBQ joints", "items": ["Franklin", "la Barbecue", "Interstellar", "LeRoy and Lewis", "Terry Black's", "Micklethwait", "Brown's", "Distant Relatives", "Salt Lick"], "sacred_cow": "Franklin (put it in B or below, ask if the line IS the flavor)", "status": "confirmed_open", "recurrence": "evidenced", "used": false, "note": "Micklethwait/Salt Lick/Brown's/Distant Relatives - verify before naming as open."},
+    {"category": "H-E-B locations", "items": ["Lake Austin", "Mueller", "Hancock", "Far West", "Riverside", "Parmer & MoPac", "Slaughter & Manchaca", "Rundberg"], "sacred_cow": "Lake Austin (fanciest) OR Hancock (central nostalgia) - pick per post", "status": "confirmed_open", "recurrence": "evidenced", "used": false},
+    {"category": "Roads (worst-of)", "items": ["I-35", "MoPac", "US 290", "SH 71", "183", "SH 45", "360", "2222", "620"], "sacred_cow": "I-35 (leave it at A, put another road at F, watch them argue what 'worst' means)", "status": "confirmed_open", "recurrence": "evidenced", "used": false},
+    {"category": "Nightlife districts", "items": ["Red River", "East 6th", "West 6th", "Rainey", "South Congress", "Warehouse District", "Domain"], "sacred_cow": "East 6th", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false},
+    {"category": "Coffee shops", "items": ["Figure 8", "Houndstooth", "Caffe Medici", "Merit", "Radio", "Mozart's", "Cosmic Saltillo", "Jo's"], "sacred_cow": "Houndstooth ('classic' = best, or merely first?)", "status": "confirmed_open", "recurrence": "plausible_unverified", "used": false}
+  ],
+
+  "hot_takes": [
+    {"take": "Veracruz migas are excellent but NOT Austin's best breakfast taco.", "category": "breakfast_tacos", "recurrence": "evidenced", "sensitivity": "safe - attacks a beloved item without saying it's bad", "used": false},
+    {"take": "Franklin is a pilgrimage, not the best use of an ordinary Austin lunch.", "category": "bbq", "recurrence": "evidenced", "sensitivity": "safe - reliably nuclear", "used": false},
+    {"take": "$7 for one Torchy's taco is delusional - go to Cuantos or Paprika.", "category": "breakfast_tacos", "recurrence": "evidenced", "sensitivity": "safe - price opinion", "used": false},
+    {"take": "P. Terry's beats Whataburger; Whataburger only wins on 'Texas feeling.'", "category": "texas_chains", "recurrence": "evidenced", "sensitivity": "safe - clean local-vs-statewide identity", "used": false},
+    {"take": "I-35 isn't Austin's worst road - MoPac's merges are worse.", "category": "roads", "recurrence": "evidenced", "sensitivity": "safe - contrarian road take", "used": false},
+    {"take": "The fanciest H-E-B is the least relaxing H-E-B.", "category": "heb_hierarchy", "recurrence": "evidenced", "sensitivity": "safe", "used": false},
+    {"take": "Home Slice is the best hang, not necessarily the best slice.", "category": "pizza_burgers_other", "recurrence": "plausible_unverified", "sensitivity": "safe", "used": false},
+    {"take": "Barton Springs is a better symbol than swim; Deep Eddy is the better afternoon.", "category": "swimming_holes", "recurrence": "plausible_unverified", "sensitivity": "safe", "used": false},
+    {"take": "Rainey Street is a patio crawl, not a great bar district.", "category": "nightlife_districts", "recurrence": "plausible_unverified", "sensitivity": "safe", "used": false},
+    {"take": "Round Rock is a better day-to-day city than Austin if nightlife isn't your priority.", "category": "neighborhoods_and_suburbs", "recurrence": "plausible_unverified", "sensitivity": "safe - challenges Austin-proper status without a factual claim", "used": false}
+  ],
+
+  "nuclear_takes_ranked": [
+    "Veracruz migas aren't the best breakfast taco - who beats them? (challenges the city's most recognizable order)",
+    "Franklin: S-tier brisket or an expensive line for a memory?",
+    "H-E-B store ranking: Lake Austin, Mueller, Hancock, or Parmer & MoPac?",
+    "P. Terry's beats Whataburger on burgers; Whataburger only wins on Texas feeling",
+    "I-35 isn't the worst road - MoPac's merges are",
+    "Home Slice is the best hang, not the best slice",
+    "Barton Springs vs Deep Eddy: icon or better actual afternoon?",
+    "Round Rock is a better day-to-day city than Austin (if nightlife isn't the point)",
+    "East 6th, Red River, Rainey, or West 6th - which is actually worth a night out?",
+    "Rainey Street is a patio crawl, not a great bar district"
+  ],
+
+  "civic_hot_buttons": {
+    "note": "USE WITH CARE. These are real current disagreements (evidenced) but they edge toward politics. Frame as the genuine two-sided debate, never take a partisan side, never state contested facts as settled (G4/G7). Good for reach; higher risk. Consider sparing use.",
+    "items": [
+      {"topic": "I-35 cap-and-stitch", "debate": "Spend hundreds of millions on deck parks reconnecting East Austin/downtown - or put every dollar into transit, housing, basic services first?", "source": "Austin Chronicle Mar 2026 (city staff urged pause on cost)", "used": false},
+      {"topic": "Waymo / robotaxis", "debate": "Restrict robotaxis near schools and emergency scenes until they prove a safety record - or let them keep scaling?", "source": "Austin Chronicle + AISD 2026", "used": false},
+      {"topic": "SXSW without the convention center", "debate": "Does SXSW without its demolished anchor feel more local and scrappy - or just harder to navigate?", "source": "Austin Chronicle 2026 (replacement not until 2029)", "used": false},
+      {"topic": "Food prices / 'experience' restaurants", "debate": "Is Austin food expensive because restaurants are struggling - or because diners subsidize an 'experience' they didn't ask for?", "source": "r/austinfood 2026", "used": false}
+    ]
+  },
+
+  "closures_for_nostalgia": {
+    "note": "For accurate 'old Austin' content. Each is a FACT with a required precise phrasing - stating these wrong (or as taste) violates G4. Nostalgia posts state what's gone; they do NOT provoke a debate on a false premise.",
+    "items": [
+      {"name": "Valentina's Tex Mex BBQ", "what": "closed (trailer-to-Buda restaurant)", "year": 2026, "safe_phrasing": "Valentina's closed"},
+      {"name": "Lammes Candies", "what": "closing after 141 years; staggered wind-down", "year": 2026, "safe_phrasing": "Lammes Candies is closing after 141 years - phrase carefully post-final-store"},
+      {"name": "El Naranjo", "what": "closed after 15+ years", "year": 2026, "safe_phrasing": "El Naranjo closed"},
+      {"name": "Fat Cats", "what": "organic bakery/coffee permanently closed", "year": 2026, "safe_phrasing": "Fat Cats closed"},
+      {"name": "Sunny's Backyard", "what": "East 7th music venue closed after 5 years", "year": 2025, "safe_phrasing": "Sunny's Backyard closed"},
+      {"name": "P. Terry's Capital Plaza", "what": "flagship closed (brand still open elsewhere, expanded 24hr)", "year": 2026, "safe_phrasing": "The Cap Plaza P. Terry's is gone - NOT 'P. Terry's is gone'"},
+      {"name": "CoCo's Cafe (Guadalupe/The Drag)", "what": "that location closed after 25+ yrs; North Austin still open", "year": 2026, "safe_phrasing": "The Guadalupe CoCo's closed - NOT 'CoCo's closed'"},
+      {"name": "Dan's Hamburgers (Airport)", "what": "closed for demolition/rebuild, ~6-8mo return", "year": 2026, "safe_phrasing": "Dan's Airport closed for redevelopment - NOT permanently closed"},
+      {"name": "Austin Convention Center", "what": "demolished; replacement not until 2029", "year": 2026, "safe_phrasing": "The Convention Center is gone until 2029"}
+    ]
+  },
+
+  "aliases": {
+    "note": "The tally KEY (TALLY.md). Maps what locals TYPE to the canonical name. Road/H-E-B shorthand is source-verified (r/Austin). Low-confidence nicknames flagged - don't assume them.",
+    "map": {
+      "Veracruz All Natural": ["veracruz", "van", "vera cruz"],
+      "Vaquero Taquero (North Campus)": ["vaquero", "vt", "vaquero taquero"],
+      "Juan in a Million": ["juan", "juan in a million", "the don juan", "don juan"],
+      "Joe's Bakery": ["joes", "joe's", "joes bakery"],
+      "Rosita's Al Pastor": ["rositas", "rosita's", "al pastor trailer"],
+      "Cisco's": ["ciscos", "cisco's"],
+      "Tacodeli": ["tacodeli", "taco deli", "td"],
+      "Torchy's Tacos": ["torchys", "torchy's", "torchy"],
+      "Nixta Taqueria": ["nixta"],
+      "Cuantos Tacos": ["cuantos"],
+      "Pueblo Viejo": ["pueblo", "pv", "pueblo viejo"],
+      "Franklin Barbecue": ["franklin", "franklins", "franklin bbq"],
+      "la Barbecue": ["la barbecue", "la bbq"],
+      "Terry Black's": ["terry blacks", "terry black's", "tbs"],
+      "Interstellar BBQ": ["interstellar", "isbbq"],
+      "LeRoy and Lewis": ["leroy and lewis", "leroy & lewis", "l&l", "leroy's"],
+      "P. Terry's": ["p terrys", "p. terry's", "pterrys", "pts", "p terry"],
+      "Whataburger": ["whataburger", "whatas", "what-a", "wb"],
+      "MoPac (Loop 1)": ["mopac", "loop 1", "loop one", "sb mopac", "nb mopac"],
+      "I-35": ["35", "i35", "i-35", "the interstate"],
+      "360": ["360", "capital of texas highway", "loop 360"],
+      "Parmer & MoPac H-E-B": ["parmer and mopac", "parmer & mopac heb", "parmer/mopac"],
+      "Slaughter & Manchaca H-E-B": ["slaughter and manchaca", "the heb on slaughter"],
+      "Rundberg H-E-B": ["rundberg", "rundberg heb"],
+      "Lake Austin H-E-B": ["lake austin", "lake austin heb", "fancy heb"],
+      "Hancock H-E-B": ["hancock", "hancock heb"]
+    },
+    "low_confidence_do_not_assume": ["Dirty Sixth", "Ra. ney", "NoLo", "Gucci H-E-B", "Bad H-E-B", "78704 as identity"]
+  },
+
+  "sensitive_do_not_use_as_fact": {
+    "note": "FACTUAL/identity claims, not taste. NEVER post as debate provocations (G4). Listed so the engine recognizes and AVOIDS them.",
+    "examples": [
+      "Where the breakfast taco was 'invented' (Austin vs San Antonio) - contested factual/origin claim.",
+      "'Austin-owned' vs 'Austin favorite' - verify ownership; prefer 'Austin favorite' unless confirmed.",
+      "Any closure/status claim not in closures_for_nostalgia or confirmed_open above.",
+      "Neighborhood claims about residents' income, politics, safety, or school quality.",
+      "Any specific real person, or current UT athletics/coach/record facts unless freshly verified."
+    ]
+  },
+
+  "harvested_write_ins": []
+}

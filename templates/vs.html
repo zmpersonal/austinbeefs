@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: vs.html  (archetype: matchup — the workhorse)
+  SLOTS (replace {{TOKEN}} before rendering):
+    {{BRAND_TAG}}    small marker tag, top right. e.g. "round 14" | "🌮 taco week"
+    {{PRETAG_A}}     tiny label above contender A. e.g. "🌮 breakfast taco throwdown"
+    {{NAME_A}}       contender A name. May contain <br>. Keep each line <= ~11 chars.
+    {{PRETAG_B}}     tiny label above contender B. e.g. "the people's pick?"
+    {{NAME_B}}       contender B name. May contain <br>. Keep each line <= ~11 chars.
+    {{SCRAWL}}       the friendly marker needle. e.g. "pick a side, cowboy 🤠"
+    {{VOTE_VALUE}}   how-to-vote text. e.g. "Name your pick<br>in the comments"
+    {{DEADLINE}}     computed by code (G3). e.g. "FRI 6PM"
+  RENDER: screenshot the 1080x1080 viewport at 1:1. Wait for document.fonts.ready first (see templates/README.md).
+-->
+<html lang="en"><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#C4560B;--orange-deep:#9E3F04;--char:#171009;--char-2:#241a10;--bone:#F7EFE1;--gold:#FFB020}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1080px;overflow:hidden;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+  .card{position:relative;width:1080px;height:1080px;background:var(--bone)}
+  .brandbar{position:absolute;top:0;left:0;right:0;height:96px;background:var(--char);display:flex;align-items:center;justify-content:space-between;padding:0 46px;z-index:6;border-bottom:4px solid var(--gold)}
+  .logo{font-family:'Anton',sans-serif;font-size:46px;text-transform:uppercase;letter-spacing:1px;color:var(--bone)}
+  .logo em{color:var(--orange);font-style:normal}
+  .tag{font-family:'Permanent Marker',cursive;font-size:20px;color:var(--gold);transform:rotate(-2deg)}
+  .stage{position:absolute;top:96px;left:0;right:0;bottom:150px;overflow:hidden}
+  .sideA,.sideB{position:absolute;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:70px}
+  .sideA{background:var(--orange);clip-path:polygon(0 0,100% 0,0 100%);color:#fff}
+  .sideB{background:var(--char-2);clip-path:polygon(100% 0,100% 100%,0 100%);color:var(--bone);align-items:flex-end;text-align:right}
+  .pretag{font-weight:900;letter-spacing:.16em;font-size:20px;opacity:.85;text-transform:uppercase;margin-bottom:10px}
+  .name{font-family:'Anton',sans-serif;font-size:104px;line-height:.86;text-transform:uppercase}
+  .sideA .name{color:#fff;text-shadow:4px 4px 0 var(--orange-deep)}
+  .sideB .name{color:var(--gold)}
+  .medal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:210px;height:210px;border-radius:50%;background:var(--char);border:9px solid var(--gold);display:flex;align-items:center;justify-content:center;z-index:5;box-shadow:0 0 0 14px rgba(23,16,9,.35)}
+  .medal span{font-family:'Anton',sans-serif;font-size:96px;color:var(--gold);text-transform:uppercase}
+  .scrawl{position:absolute;bottom:34px;left:50%;transform:translateX(-50%) rotate(-3deg);font-family:'Permanent Marker',cursive;font-size:40px;color:var(--char);background:var(--gold);padding:8px 26px;border-radius:40px;white-space:nowrap;z-index:8;box-shadow:0 8px 0 rgba(0,0,0,.18)}
+  .score{position:absolute;left:0;right:0;bottom:0;height:150px;background:var(--char);z-index:6;display:flex;border-top:4px solid var(--gold)}
+  .half{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 46px}
+  .half+.half{border-left:2px dashed #4a3826}
+  .lab{font-weight:900;font-size:20px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+  .val{font-family:'Anton',sans-serif;font-size:38px;text-transform:uppercase;color:var(--bone);line-height:.95}
+  .val small{color:#b7a58c;font-size:.62em}
+</style></head>
+<body><div class="card">
+  <div class="brandbar"><div class="logo">AUSTIN <em>BEEFS</em></div><div class="tag">{{BRAND_TAG}}</div></div>
+  <div class="stage">
+    <div class="sideA"><div class="pretag">{{PRETAG_A}}</div><div class="name">{{NAME_A}}</div></div>
+    <div class="sideB"><div class="pretag">{{PRETAG_B}}</div><div class="name">{{NAME_B}}</div></div>
+    <div class="medal"><span>VS</span></div>
+    <div class="scrawl">{{SCRAWL}}</div>
+  </div>
+  <div class="score">
+    <div class="half"><div class="lab">🗣️ how to vote</div><div class="val">{{VOTE_VALUE}}</div></div>
+    <div class="half"><div class="lab">⏰ bell rings</div><div class="val">{{DEADLINE}}<br><small>then we count</small></div></div>
+  </div>
+</div></body></html>

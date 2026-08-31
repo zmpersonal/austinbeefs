@@ -1,0 +1,50 @@
+# ---------------------------------------------------------------
+# Austin Beefs — .gitignore
+# Priority #1: never commit credentials.
+# ---------------------------------------------------------------
+
+# Secrets / credentials — NEVER commit these
+.env
+.env.*
+!.env.example
+*.token
+*.pem
+*.key
+*.p12
+secrets.json
+credentials.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# OS / editor noise
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Local render output — the pipeline screenshots cards to PNG at the repo
+# root and into /out. Ignore all root-level PNGs, but keep the two
+# intentional design references that are committed on purpose.
+/*.png
+!/round1_preview.png
+!/verdict_preview.png
+out/
+renders/
+tmp/
+*.tmp
+
+# Generated runtime state (uncomment if you'd rather not track live state)
+# current_round.json
