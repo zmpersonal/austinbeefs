@@ -12,7 +12,7 @@
   "review_phase_ends": "2026-09-14",
   "_gate_note": "auto_publish:false = the review gate. While false, the cycle opens a PR with the next card+caption instead of posting. Flip to true after the ~2-week review phase (see BUILD.md step 8).",
 
-  "page_id": "YOUR_FB_PAGE_ID",
+  "page_id": "1283217111543170",
   "blotato_fb_account_id": "YOUR_BLOTATO_ACCOUNT_ID",
   "reference_bank": "reference_bank.json",
 
