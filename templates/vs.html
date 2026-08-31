@@ -4,9 +4,11 @@
   SLOTS (replace {{TOKEN}} before rendering):
     {{BRAND_TAG}}    small marker tag, top right. e.g. "round 14" | "🌮 taco week"
     {{PRETAG_A}}     tiny label above contender A. e.g. "🌮 breakfast taco throwdown"
-    {{NAME_A}}       contender A name. May contain <br>. Keep each line <= ~11 chars.
+    {{NAME_A}}       contender A name. ANY length - the card auto-shrinks and wraps
+                     it to fit (see the auto-fit script at the bottom of this file).
+                     <br> optional; only use it to force a specific break.
     {{PRETAG_B}}     tiny label above contender B. e.g. "the people's pick?"
-    {{NAME_B}}       contender B name. May contain <br>. Keep each line <= ~11 chars.
+    {{NAME_B}}       contender B name. ANY length - same auto-fit as NAME_A.
     {{SCRAWL}}       the friendly marker needle. e.g. "pick a side, cowboy 🤠"
     {{VOTE_VALUE}}   how-to-vote text. e.g. "Name your pick<br>in the comments"
     {{DEADLINE}}     computed by code (G3). e.g. "FRI 6PM"
@@ -29,7 +31,7 @@
   .sideA{background:var(--orange);clip-path:polygon(0 0,100% 0,0 100%);color:#fff}
   .sideB{background:var(--char-2);clip-path:polygon(100% 0,100% 100%,0 100%);color:var(--bone);align-items:flex-end;text-align:right}
   .pretag{font-weight:900;letter-spacing:.16em;font-size:20px;opacity:.85;text-transform:uppercase;margin-bottom:10px}
-  .name{font-family:'Anton',sans-serif;font-size:104px;line-height:.86;text-transform:uppercase}
+  .name{font-family:'Anton',sans-serif;font-size:104px;line-height:.86;text-transform:uppercase;width:fit-content;max-width:440px}
   .sideA .name{color:#fff;text-shadow:4px 4px 0 var(--orange-deep)}
   .sideB .name{color:var(--gold)}
   .medal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:210px;height:210px;border-radius:50%;background:var(--char);border:9px solid var(--gold);display:flex;align-items:center;justify-content:center;z-index:5;box-shadow:0 0 0 14px rgba(23,16,9,.35)}
@@ -54,4 +56,65 @@
     <div class="half"><div class="lab">🗣️ how to vote</div><div class="val">{{VOTE_VALUE}}</div></div>
     <div class="half"><div class="lab">⏰ bell rings</div><div class="val">{{DEADLINE}}<br><small>then we count</small></div></div>
   </div>
-</div></body></html>
+</div>
+<script>
+/* AUTO-FIT contender names (added because a fixed 104px only fits ~6 characters
+   before the name hits the VS badge or the diagonal - see templates/README.md).
+   Shrinks font-size until the name clears BOTH the centre badge and the sloping
+   edge of its own triangle. Long names wrap to 2+ lines first, then shrink, so
+   any real contender name renders correctly with no length guessing upstream.
+   MUST run after webfonts load or the measurements are wrong - hence
+   document.fonts.ready, and render_card.py calls window.__fitNames() again
+   after fonts.ready to make the ordering deterministic. Idempotent. */
+window.__fitNames = function () {
+  var stage = document.querySelector('.stage');
+  var medal = document.querySelector('.medal');
+  if (!stage || !medal) return;
+  var sr = stage.getBoundingClientRect();
+  var mr = medal.getBoundingClientRect();
+  var GAP = 18, MAX = 104, MIN = 40, STEP = 2;
+
+  [['A', document.querySelector('.sideA .name')],
+   ['B', document.querySelector('.sideB .name')]].forEach(function (pair) {
+    var side = pair[0], el = pair[1];
+    if (!el) return;
+    el.style.maxWidth = 'none';
+    var r0 = el.getBoundingClientRect();
+    /* Constrain the box to the width actually available beside the badge
+       FIRST, so a multi-word name WRAPS at 104px rather than being shrunk to a
+       single tiny line. Only then do we shrink, and only for what still does
+       not fit (e.g. one long unbreakable word). Wrapping is at spaces only -
+       hard-breaking mid-word would look broken. */
+    var avail = (side === 'A')
+      ? (mr.left - GAP) - r0.left
+      : r0.right - (mr.right + GAP);
+    el.style.maxWidth = Math.max(160, Math.round(avail)) + 'px';
+
+    var size = MAX;
+    el.style.fontSize = size + 'px';
+    while (size > MIN) {
+      var r = el.getBoundingClientRect();
+      /* Measure the INK, not the box. max-width can cap the element while a
+         long unbreakable word still overflows it - scrollWidth catches that,
+         a bounding-rect check alone silently passes. */
+      var ink = Math.max(el.scrollWidth, r.width);
+      /* the shared diagonal runs (stage right, top) -> (stage left, bottom).
+         Side A is squeezed at its LOWEST point, side B at its HIGHEST. */
+      var depth = (side === 'A') ? (r.bottom - sr.top) : (r.top - sr.top);
+      var diagX = sr.left + sr.width * (1 - depth / sr.height);
+      var ok = (side === 'A')
+        ? (r.left + ink <= Math.min(diagX, mr.left - GAP))
+        : (r.right - ink >= Math.max(diagX, mr.right + GAP));
+      if (ok) break;
+      size -= STEP;
+      el.style.fontSize = size + 'px';
+    }
+  });
+};
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(function () { window.__fitNames(); });
+} else {
+  window.addEventListener('load', function () { window.__fitNames(); });
+}
+</script>
+</body></html>

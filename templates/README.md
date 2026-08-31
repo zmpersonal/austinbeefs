@@ -20,17 +20,37 @@ Each file's top comment block is the authoritative slot list for that template.
 
 - `{{DEADLINE}}` is computed by code from publish time (guardrail G3) — the model never writes it.
 - Slots may contain `<br>` to control line breaks. They must NOT contain raw `{` `}` or unescaped quotes.
-- **Keep it short.** Loud type overflows fast. Rough caps that fit cleanly:
-  - vs `{{NAME_A/B}}`: ~11 chars/line, up to 2 lines.
+- **vs `{{NAME_A}}` / `{{NAME_B}}`: no length limit — the card auto-fits.**
+  `vs.html` measures each name after the fonts load and adjusts it to clear both the VS
+  badge and the sloping edge of its own triangle. It **wraps at spaces first** (so
+  "Vaquero Taquero" becomes two full-size lines) and only shrinks the font when a single
+  unbreakable word is still too wide. Range 104px → 40px floor.
+  Verified renders: `Veracruz` (1 line, barely shrunk), `Vaquero Taquero` /
+  `Juan in a Million` (2 lines, near-full size), `Terry Black's` / `La Barbecue` (2 lines).
+  Use `<br>` only to force a break you specifically want; you do not need it to fit.
+
+  > The old "~11 chars/line" guidance in this file was **wrong** and caused a real
+  > collision: the usable width beside the badge is only ~324px, which at 104px Anton is
+  > about **6 characters** — `VERACRUZ` (8) already overlapped the badge. Auto-fit exists
+  > because capping names to ~6 chars would make most real contenders unusable.
+
+- **The other slots have no auto-fit — these caps are real:**
   - hot_take `{{CLAIM}}` / open_floor `{{QUESTION}}`: ~46 chars/line, up to 3 lines.
-  - `{{SCRAWL}}`: keep under ~34 chars or it wraps and orphans a trailing emoji (seen in the R1 test render). Put the emoji mid-line, not at the end.
+  - `{{SCRAWL}}`: under ~34 chars, or it wraps and orphans a trailing emoji.
   - tier `{{ITEMS_*}}`: one short line each (~28 chars).
-- Generation (cycle step 6) should cap name/claim length to these before filling.
+- **Never end a slot with a lone trailing emoji after a `<br>`.** It orphans onto its own
+  line. Applies to `{{SCRAWL}}` *and* `{{VOTE_VALUE}}` — `"Name your spot<br>👇"` put the
+  👇 alone on a second footer line; `"Name your<br>spot 👇"` renders correctly.
+- Generation (cycle step 6) should respect the caps above. It does **not** need to
+  measure or cap contender names.
 
 ## Rendering (the two things that break it)
 
 1. **Wait for fonts.** Screenshotting before webfonts load = fallback fonts = broken brand.
-   Always wait for `document.fonts.ready` before the shot. Python Playwright example:
+   Always wait for `document.fonts.ready` before the shot. This is also why auto-fit runs
+   after `fonts.ready` — measuring in a fallback font produces the wrong size.
+   `scripts/render_card.py` does all of this for you; call it rather than re-implementing.
+   Python Playwright example:
 
    ```python
    from playwright.sync_api import sync_playwright
@@ -42,6 +62,7 @@ Each file's top comment block is the authoritative slot list for that template.
        pg.goto(url, wait_until="networkidle")
        pg.evaluate("document.fonts.ready")
        pg.wait_for_timeout(300)
+       pg.evaluate("window.__fitNames && window.__fitNames()")   # auto-fit (vs.html)
        pg.screenshot(path="out.png", clip={"x":0,"y":0,"width":1080,"height":1080})
        b.close()
    ```
