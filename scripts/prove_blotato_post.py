@@ -113,13 +113,34 @@ def http_no_raise(method, url, headers=None, body=None):
             return e.code, {"raw": raw}
 
 
+class PostError(RuntimeError):
+    """G6: 'you do not have a valid, recorded post.' Raised - not exited - so a
+    conductor can catch it in the dangerous window between 'the post went live'
+    and 'the state was written', record what happened, and reconcile. The CLI
+    entry points below turn it back into a loud exit 1, so terminal behaviour is
+    unchanged."""
+
+
 def halt(msg):
     """Guardrail G6: fail LOUD. Never let the pipeline continue on a missing or
-    uncertain post-id - a wrong id means the next cycle tallies the wrong post."""
-    print("\n" + "=" * 70, file=sys.stderr)
-    print("HALT (G6): " + msg, file=sys.stderr)
-    print("=" * 70, file=sys.stderr)
-    sys.exit(1)
+    uncertain post-id - a wrong id means the next cycle tallies the wrong post.
+
+    Raises PostError. Callers that are CLIs must catch it and exit 1 (see
+    _cli_guard below); callers that are the conductor catch it to record the
+    half-done state before stopping."""
+    raise PostError(msg)
+
+
+def _cli_guard(fn):
+    """Run a CLI main() so a PostError still prints the loud banner and exits 1,
+    exactly as the old sys.exit-based halt() did."""
+    try:
+        fn()
+    except PostError as e:
+        print("\n" + "=" * 70, file=sys.stderr)
+        print("HALT (G6): " + str(e), file=sys.stderr)
+        print("=" * 70, file=sys.stderr)
+        sys.exit(1)
 
 
 def blotato_post_test(api_key, account_id, page_id):
@@ -269,4 +290,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    _cli_guard(main)

@@ -31,11 +31,11 @@ G6 - THE CAPTURE LOGIC IS IMPORTED, NOT COPIED
   copies that drift - and a drifted post-id capture is exactly the failure G6
   exists to prevent.
 
-  Caveat worth knowing: that module's halt() calls sys.exit(1), so a capture
-  failure terminates the process rather than raising. That IS fail-loud and is
-  correct for the cron, but it means post_card() cannot be wrapped in a
-  try/except by a caller. Converting halt() to raise a PostError is a small
-  follow-up if you want the cycle to handle it more gracefully.
+  Failures raise PostError (from prove_blotato_post). The conductor catches it
+  at the dangerous window between "the post went live" and "the state was
+  written" - see prompts/cycle.md Step 0/8a - so it can record the half-done
+  state instead of dying silently. This CLI still exits 1 with the same loud
+  banner via _cli_guard.
 
 SAFETY
   This posts PUBLICLY to a live Page. There is no dry default: you must pass a
@@ -57,6 +57,8 @@ sys.path.insert(0, HERE)
 # Single source of truth for the Blotato surface AND the G6 capture rules.
 from prove_blotato_post import (      # noqa: E402
     BLOTATO_BASE,
+    PostError,
+    _cli_guard,
     BLOTATO_POST_PATH,
     http,
     halt,
@@ -224,4 +226,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    _cli_guard(main)
