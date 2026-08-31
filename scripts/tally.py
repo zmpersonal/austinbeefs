@@ -94,10 +94,20 @@ def load_bank(path=BANK_PATH):
         return json.load(f)
 
 
+def unsafe_as_auto_alias(form):
+    """True if a CANONICAL name is too collision-prone to auto-add as a match
+    form: purely numeric (canonical "360" would fire on "paid 360 bucks") or
+    <= 2 characters. Explicit aliases from the bank are NOT subject to this -
+    the bank deliberately keeps short ones like "vt"/"pv" and flags them under
+    aliases.review_sensitive."""
+    return (not form) or form.isdigit() or len(form) <= 2
+
+
 def build_alias_index(bank, contenders):
     """canonical name -> [normalized alias, ...], for every bank entry.
 
-    The canonical name is always its own alias. Names on the bank's
+    The canonical name is normally its own alias, EXCEPT when
+    unsafe_as_auto_alias() rejects it. Names on the bank's
     `low_confidence_do_not_assume` list are NEVER used as match keys."""
     amap = bank.get("aliases", {}).get("map", {})
     do_not_assume = {normalize(x) for x in
@@ -105,15 +115,22 @@ def build_alias_index(bank, contenders):
 
     index = {}
     for canonical, aliases in amap.items():
-        forms = {normalize(canonical)} | {normalize(a) for a in aliases}
+        forms = {normalize(a) for a in aliases}
+        cform = normalize(canonical)
+        if not unsafe_as_auto_alias(cform):     # e.g. "360" is NOT auto-added
+            forms.add(cform)
         forms = {f for f in forms if f and f not in do_not_assume}
         if forms:
             index[canonical] = sorted(forms, key=len, reverse=True)
 
-    # A contender might not be in the alias map at all; still match its own name.
+    # A contender might not be in the alias map at all; still match its own
+    # name - unless that name is itself collision-prone, in which case it needs
+    # an explicit alias in the bank to be matchable at all.
     for c in contenders:
         if c not in index:
-            index[c] = [normalize(c)]
+            cform = normalize(c)
+            if not unsafe_as_auto_alias(cform):
+                index[c] = [cform]
     return index
 
 

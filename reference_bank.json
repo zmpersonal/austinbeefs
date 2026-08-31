@@ -186,7 +186,7 @@
   "aliases": {
     "note": "The tally KEY (TALLY.md). Maps what locals TYPE to the canonical name. Road/H-E-B shorthand is source-verified (r/Austin). Low-confidence nicknames flagged - don't assume them.",
     "map": {
-      "Veracruz All Natural": ["veracruz", "van", "vera cruz"],
+      "Veracruz All Natural": ["veracruz", "vera cruz"],
       "Vaquero Taquero (North Campus)": ["vaquero", "vt", "vaquero taquero"],
       "Juan in a Million": ["juan", "juan in a million", "the don juan", "don juan"],
       "Joe's Bakery": ["joes", "joe's", "joes bakery"],
@@ -196,24 +196,39 @@
       "Torchy's Tacos": ["torchys", "torchy's", "torchy"],
       "Nixta Taqueria": ["nixta"],
       "Cuantos Tacos": ["cuantos"],
-      "Pueblo Viejo": ["pueblo", "pv", "pueblo viejo"],
+      "Pueblo Viejo": ["pv", "pueblo viejo"],
       "Franklin Barbecue": ["franklin", "franklins", "franklin bbq"],
       "la Barbecue": ["la barbecue", "la bbq"],
       "Terry Black's": ["terry blacks", "terry black's", "tbs"],
       "Interstellar BBQ": ["interstellar", "isbbq"],
       "LeRoy and Lewis": ["leroy and lewis", "leroy & lewis", "l&l", "leroy's"],
       "P. Terry's": ["p terrys", "p. terry's", "pterrys", "pts", "p terry"],
-      "Whataburger": ["whataburger", "whatas", "what-a", "wb"],
+      "Whataburger": ["whataburger", "whatas", "wb"],
       "MoPac (Loop 1)": ["mopac", "loop 1", "loop one", "sb mopac", "nb mopac"],
-      "I-35": ["35", "i35", "i-35", "the interstate"],
-      "360": ["360", "capital of texas highway", "loop 360"],
+      "I-35": ["i35", "i-35", "the interstate"],
+      "360": ["capital of texas highway", "loop 360"],
       "Parmer & MoPac H-E-B": ["parmer and mopac", "parmer & mopac heb", "parmer/mopac"],
       "Slaughter & Manchaca H-E-B": ["slaughter and manchaca", "the heb on slaughter"],
       "Rundberg H-E-B": ["rundberg", "rundberg heb"],
-      "Lake Austin H-E-B": ["lake austin", "lake austin heb", "fancy heb"],
+      "Lake Austin H-E-B": ["lake austin heb", "fancy heb"],
       "Hancock H-E-B": ["hancock", "hancock heb"]
     },
-    "low_confidence_do_not_assume": ["Dirty Sixth", "Ra. ney", "NoLo", "Gucci H-E-B", "Bad H-E-B", "78704 as identity"]
+    "low_confidence_do_not_assume": ["Dirty Sixth", "Ra. ney", "NoLo", "Gucci H-E-B", "Bad H-E-B", "78704 as identity"],
+    "review_sensitive": {
+      "note": "These aliases collide with ordinary words or other Austin landmarks. They are KEPT because they are how locals really type - but they only produce a FAKE vote when that contender is IN the matchup (elsewhere they are merely logged as harmless write-ins). When a round features one of these, eyeball the tally debug output before publishing the verdict.",
+      "items": [
+        {"alias": "td", "contender": "Tacodeli", "collides_with": "touchdown"},
+        {"alias": "pts", "contender": "P. Terry's", "collides_with": "points (sports/fantasy)"},
+        {"alias": "wb", "contender": "Whataburger", "collides_with": "Warner Bros"},
+        {"alias": "vt", "contender": "Vaquero Taquero (North Campus)", "collides_with": "Virginia Tech"},
+        {"alias": "pv", "contender": "Pueblo Viejo", "collides_with": "no known collision; same 2-letter hazard class"},
+        {"alias": "juan", "contender": "Juan in a Million", "collides_with": "a person's first name"},
+        {"alias": "joes", "contender": "Joe's Bakery", "collides_with": "a person's name"},
+        {"alias": "franklin", "contender": "Franklin Barbecue", "collides_with": "Franklin Ave"},
+        {"alias": "hancock", "contender": "Hancock H-E-B", "collides_with": "Hancock Center / Hancock golf course"},
+        {"alias": "rundberg", "contender": "Rundberg H-E-B", "collides_with": "Rundberg Lane itself"}
+      ]
+    }
   },
 
   "sensitive_do_not_use_as_fact": {
