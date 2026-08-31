@@ -1,0 +1,27 @@
+{
+  "round": 1,
+  "archetype": "open_floor",
+  "matchup": {
+    "type": "open_floor",
+    "question": "What's Austin's best breakfast taco place?",
+    "contender_pool": [
+      "Veracruz All Natural",
+      "Juan in a Million",
+      "Joe's Bakery",
+      "Rosita's Al Pastor",
+      "Cisco's",
+      "Vaquero Taquero (North Campus)",
+      "Nixta Taqueria",
+      "Cuantos Tacos",
+      "Pueblo Viejo",
+      "Tacodeli"
+    ],
+    "no_verdict_half": true
+  },
+  "png": "/home/runner/work/austinbeefs/austinbeefs/queue/round_1.final.png",
+  "deadline_iso": "2026-09-04T17:00:00",
+  "deadline_label": "FRI 5PM",
+  "started_at": "2026-08-31T21:02:29.600747",
+  "blotato_submission_id": null,
+  "_note": "An irreversible post is about to be attempted. If this file survives, the post may be LIVE but unrecorded. Recover with blotato_submission_id (re-poll GET /v2/posts/{id})."
+}
