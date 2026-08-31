@@ -1,0 +1,15 @@
+{
+  "round": 1,
+  "archetype": "open_floor",
+  "matchup": {
+    "type": "open_floor",
+    "question": "What's Austin's best breakfast taco place?",
+    "contender_pool": ["Veracruz All Natural", "Juan in a Million", "Joe's Bakery", "Rosita's Al Pastor", "Cisco's", "Vaquero Taquero (North Campus)", "Nixta Taqueria", "Cuantos Tacos", "Pueblo Viejo", "Tacodeli"],
+    "no_verdict_half": true
+  },
+  "page_id": "1283217111543170",
+  "fb_post_id": null,
+  "blotato_submission_id": null,
+  "deadline_iso": null,
+  "posted_at": null
+}
