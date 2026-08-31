@@ -1,0 +1,141 @@
+{
+  "_note": "SYNTHETIC TEST DATA. Not real comments. 'Comal Street Tacos', 'Tres Hermanas Taqueria' and 'Buenos Dias Tacos' are INVENTED names used to exercise novel-nomination handling.",
+  "data": [
+    {
+      "id": "r1",
+      "from": {
+        "name": "Marisol",
+        "id": "u1"
+      },
+      "message": "Veracruz All Natural, no debate"
+    },
+    {
+      "id": "r2",
+      "from": {
+        "name": "Deandre",
+        "id": "u2"
+      },
+      "message": "juan in a million, the Don Juan is a full meal"
+    },
+    {
+      "id": "r3",
+      "from": {
+        "name": "Priya",
+        "id": "u3"
+      },
+      "message": "Comal Street Tacos on the east side, nobody talks about them enough"
+    },
+    {
+      "id": "r4",
+      "from": {
+        "name": "Marisol",
+        "id": "u1"
+      },
+      "message": "veracruz again for the record"
+    },
+    {
+      "id": "r5",
+      "from": {
+        "name": "Tom",
+        "id": "u4"
+      },
+      "message": "Joe's Bakery all day long"
+    },
+    {
+      "id": "r6",
+      "from": {
+        "name": "Ash",
+        "id": "u5"
+      },
+      "message": "Comal Street Tacos!! the chorizo is unreal"
+    },
+    {
+      "id": "r7",
+      "from": {
+        "name": "Nina",
+        "id": "u6"
+      },
+      "message": "gotta be veracruz, migas taco is the standard"
+    },
+    {
+      "id": "r8",
+      "from": {
+        "name": "Rey",
+        "id": "u7"
+      },
+      "message": "Tres Hermanas Taqueria off Braker, criminally underrated"
+    },
+    {
+      "id": "r9",
+      "from": {
+        "name": "Kev",
+        "id": "u8"
+      },
+      "message": "traffic on i-35 means I never make it anywhere before 10am lol"
+    },
+    {
+      "id": "r10",
+      "from": {
+        "name": "Sam",
+        "id": "u9"
+      },
+      "message": "nixta, and it's not close"
+    },
+    {
+      "id": "r11",
+      "from": {
+        "name": "Bex",
+        "id": "u10"
+      },
+      "message": "tagging @carlos he will have thoughts"
+    },
+    {
+      "id": "r12",
+      "from": {
+        "name": "Luis",
+        "id": "u11"
+      },
+      "message": "Buenos Dias Tacos in south austin, the trailer not the storefront"
+    },
+    {
+      "id": "r13",
+      "from": {
+        "name": "Jo",
+        "id": "u12"
+      },
+      "message": "veracruz obviously"
+    },
+    {
+      "id": "r14",
+      "from": {
+        "name": "Ida",
+        "id": "u13"
+      },
+      "message": "Comal Street Tacos, hands down"
+    },
+    {
+      "id": "r15",
+      "from": {
+        "name": "Pete",
+        "id": "u14"
+      },
+      "message": "y'all are all wrong but I'm not saying mine, too crowded already"
+    },
+    {
+      "id": "r16",
+      "from": {
+        "name": "Cruz",
+        "id": "u15"
+      },
+      "message": "the trailer by my house, best in town"
+    },
+    {
+      "id": "r17",
+      "from": {
+        "name": "Wren",
+        "id": "u16"
+      },
+      "message": "Juan in a Million forever"
+    }
+  ]
+}
