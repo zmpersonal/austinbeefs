@@ -54,6 +54,8 @@ jobs:
 
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"due={'true' if due else 'false'}\n")
+              # phase, so the PR step and the commit step stay mutually exclusive
+              f.write(f"auto={'true' if cfg.get('auto_publish') is True else 'false'}\n")
           PY
 
       - uses: actions/setup-node@v4
@@ -82,10 +84,13 @@ jobs:
       # --- REVIEW PHASE: open a PR instead of committing (while auto_publish:false)
       # The cycle prompt itself decides whether it already posted (auto) or just
       # staged files (review). If it staged a next-card for approval, this opens
-      # the PR. Once auto_publish:true, the cycle commits directly and this PR
-      # step simply finds nothing to open.
+      # the PR.
+      # REVIEW PHASE ONLY. In autonomous mode the conductor DELETES the staged
+      # artifacts and moves the PNG to published/ - those deletions are still
+      # changes under queue/, so without the phase gate this would open a
+      # spurious PR while the commit step pushes to main.
       - name: Open review PR (if anything staged)
-        if: steps.gate.outputs.due == 'true'
+        if: steps.gate.outputs.due == 'true' && steps.gate.outputs.auto == 'false'
         uses: peter-evans/create-pull-request@v6
         with:
           branch: cycle/next          # STABLE: refreshes one PR instead of opening one per day
@@ -105,22 +110,28 @@ jobs:
             `*_caption.tmpl` (`{{DEADLINE}}` is filled at merge).
             Close the PR to skip this round.
             (Verdict cards especially: sanity-check the tallied winner.)
+          # queue/ ONLY. In review phase the conductor writes nothing else: root
+          # current_round.json and canon.json are written by the publish-on-merge
+          # job at POST time. At cold start they do not exist, and naming them
+          # here made git add fail the whole step:
+          #   fatal: pathspec 'current_round.json' did not match any files
           add-paths: |
             queue/
-            current_round.json
-            canon.json
 
       # --- AUTONOMOUS PHASE: once auto_publish:true, persist state directly ---
       - name: Commit state (autonomous phase only)
-        if: steps.gate.outputs.due == 'true'
+        if: steps.gate.outputs.due == 'true' && steps.gate.outputs.auto == 'true'
         run: |
-          AUTO=$(python3 -c "import json;print(json.load(open('config.json')).get('auto_publish'))")
-          if [ "$AUTO" = "True" ]; then
-            git config user.name "austin-beefs"
-            git config user.email "bot@users.noreply.github.com"
-            git add current_round.json canon.json queue/ published/ reference_bank.json reports/ || true
-            git diff --staged --quiet || git commit -m "cycle: $(date -u +%F)"
-            git push
-          else
-            echo "review phase (auto_publish:false) - state changes go via the PR above."
-          fi
+          git config user.name "austin-beefs"
+          git config user.email "bot@users.noreply.github.com"
+          # `git add` is ATOMIC across pathspecs: one missing path aborts the
+          # whole command and stages NOTHING - even the paths that do exist.
+          # The old `git add a b c || true` therefore degraded to a SILENT no-op
+          # whenever any path was absent: no commit, no push, no error. In
+          # autonomous mode that means a post goes live and its state is never
+          # recorded (the D5 failure). Add only what exists.
+          for p in current_round.json canon.json queue published reference_bank.json reports; do
+            [ -e "$p" ] && git add "$p"
+          done
+          git diff --staged --quiet || git commit -m "cycle: $(date -u +%F)"
+          git push
