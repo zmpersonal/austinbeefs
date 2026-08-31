@@ -88,11 +88,22 @@ jobs:
         if: steps.gate.outputs.due == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: cycle/${{ github.run_id }}
+          branch: cycle/next          # STABLE: refreshes one PR instead of opening one per day
           title: "Austin Beefs - next card for review"
           body: |
-            The next card + caption are staged here. Merge to approve & post,
-            close to skip. Edit the caption file before merging to tweak wording.
+            The next card is staged here. **Merging posts it** - that push fires
+            `publish-staged.yml`.
+
+            **The deadline is computed at MERGE time, not now.** The preview PNG
+            shows `SET ON POST` in the deadline slot on purpose, so it cannot
+            imply a date that would be wrong by the time you merge (G3). At merge
+            the card is re-rendered with the real deadline, and the publisher
+            **refuses to post if any slot other than DEADLINE changed** - what you
+            reviewed is what ships.
+
+            Review: the preview PNG, `*_slots.json` (the exact text), and
+            `*_caption.tmpl` (`{{DEADLINE}}` is filled at merge).
+            Close the PR to skip this round.
             (Verdict cards especially: sanity-check the tallied winner.)
           add-paths: |
             queue/

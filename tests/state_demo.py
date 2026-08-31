@@ -30,13 +30,24 @@ ok("next_round_number() -> 1 (Round 1 = the fixed taco open floor)")
 
 # ---------------------------------------------------------------- 2
 show(2, "COMPUTE DEADLINE (G3 - code owns the date)")
-posted = datetime(2026, 8, 31, 18, 0, 0)          # Monday 6pm
+posted = datetime(2026, 8, 31, 18, 0, 0)          # Monday 6pm - AFTER post_time
 dl = state.compute_deadline(posted, ROOT)
 print(f"   posted_at {posted.isoformat()}  + cadence {dl['days']}d")
 print(f"   -> iso   {dl['iso']}")
 print(f"   -> label {dl['label']!r}   <- this is what goes on the card")
-assert dl["label"] == "THU 6PM", dl["label"]
-ok("label built without %-I/%p, so macOS and Linux agree")
+assert dl["label"] == "FRI 5PM", dl["label"]
+ok("snapped to post_time_local (17:00), not the raw 18:00 minute")
+ok("posted AFTER 17:00 -> pushed to FRI, so the window is never < cadence")
+assert (datetime.fromisoformat(dl["iso"]) - posted) >= timedelta(days=3)
+ok("voting window is a FULL cadence period")
+
+morning = datetime(2026, 8, 31, 9, 0, 0)          # Monday 9am - BEFORE post_time
+dlm = state.compute_deadline(morning, ROOT)
+print(f"   morning merge {morning:%a %H:%M} -> {dlm['label']!r}")
+assert dlm["label"] == "THU 5PM", dlm["label"]
+ok("morning merge lands on the natural day (THU), also a clean 5PM")
+assert (datetime.fromisoformat(dlm["iso"]) - morning) >= timedelta(days=3)
+ok("clean label built without %-I/%p, so macOS and Linux agree")
 
 # ---------------------------------------------------------------- 3
 show(3, "FRESH POST - write current_round, append canon")

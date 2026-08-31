@@ -1,0 +1,72 @@
+name: publish-staged
+# Closes the REVIEW-PHASE loop. Merging the review PR lands the staged card on
+# main; that push fires this workflow, which recomputes the deadline at THIS
+# moment (G3), re-renders, proves only DEADLINE changed, then posts.
+#
+# Only runs while auto_publish is FALSE. In autonomous mode the conductor posts
+# inside its own run, and scripts/publish_staged.py exits at its P0 guard - that
+# guard is the double-post prevention.
+
+on:
+  push:
+    branches: [main]
+    paths: ['queue/**']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+
+      - name: Install Playwright (the re-render needs it)
+        run: |
+          pip install playwright
+          python3 -m playwright install --with-deps chromium
+
+      # P0-P7. Stops before anything irreversible.
+      - name: Prepare (validate, re-render with fresh deadline, breadcrumb)
+        id: prep
+        run: python3 scripts/publish_staged.py --prepare
+
+      # The breadcrumb is worthless on the runner's ephemeral disk - it must be
+      # in the repo BEFORE the post, or a crash loses it and the next run
+      # double-posts. [skip ci] stops this push from retriggering this workflow.
+      - name: Push the breadcrumb BEFORE posting
+        if: steps.prep.outputs.should_publish == 'true'
+        run: |
+          git config user.name "austin-beefs"
+          git config user.email "bot@users.noreply.github.com"
+          git add queue/PENDING_POST.json
+          git commit -m "publish: breadcrumb for round ${{ steps.prep.outputs.round }} [skip ci]"
+          git push
+
+      # P8-P10. The irreversible half.
+      - name: Post and record
+        if: steps.prep.outputs.should_publish == 'true'
+        env:
+          BLOTATO_API_KEY: ${{ secrets.BLOTATO_API_KEY }}
+        run: python3 scripts/publish_staged.py --post
+
+      - name: Commit state and cleared queue
+        if: steps.prep.outputs.should_publish == 'true' && success()
+        run: |
+          git config user.name "austin-beefs"
+          git config user.email "bot@users.noreply.github.com"
+          git add current_round.json canon.json queue/ published/ || true
+          git diff --staged --quiet || git commit -m "publish: round ${{ steps.prep.outputs.round }} [skip ci]"
+          git push
+
+      # If --post died mid-flight the breadcrumb now carries the
+      # blotato_submission_id. Push it so the recovery key survives the runner.
+      - name: Persist breadcrumb after a failed publish
+        if: failure() && steps.prep.outputs.should_publish == 'true'
+        run: |
+          git config user.name "austin-beefs"
+          git config user.email "bot@users.noreply.github.com"
+          git add queue/PENDING_POST.json || true
+          git diff --staged --quiet || git commit -m "publish: FAILED mid-post, recovery key saved [skip ci]"
+          git push || true
+          echo "::error title=Publish failed mid-post::A post may be LIVE but unrecorded. queue/PENDING_POST.json holds blotato_submission_id - re-poll GET /v2/posts/{id}, put the fb_post_id into current_round.json, then delete the breadcrumb."

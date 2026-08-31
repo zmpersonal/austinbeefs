@@ -208,11 +208,27 @@ def is_post_due(root=None, today=None):
     return days >= cadence_days(root)
 
 
-def compute_deadline(posted_at, root=None, config=None):
-    """G3: CODE owns this date. -> {"iso", "label", "days"}.
+def compute_deadline(posted_at, root=None, config=None, snap=True):
+    """G3: CODE owns this date. -> {"iso", "label", "days", "snapped"}.
 
-    label is what goes on the card, e.g. "MON 6PM". Built by hand rather than
-    with %-I/%p so it renders identically on macOS and on the Linux runner."""
+    THE SINGLE IMPLEMENTATION. Both the autonomous conductor (which posts at
+    cron time) and the review-phase publisher (which posts whenever a human
+    merges) call this, so both produce identical, clean deadlines.
+
+    SNAPPING: the raw arithmetic posted_at + cadence_days inherits the minute it
+    happened to run - a merge at 14:30 would put "THU 2:30PM" on the card, which
+    reads like a bug. With snap=True the deadline lands on config.post_time_local
+    ("17:00" -> 5PM) on the target day.
+
+    THE SHORT-WINDOW EDGE CASE: snapping can pull the deadline EARLIER than a
+    full cadence period. Merge Monday 20:00 with a 3-day cadence and a 17:00 post
+    time, and the naive target is Thursday 17:00 - only 2d21h of voting. So after
+    snapping we push out a whole day at a time until the window is at least
+    cadence_days long. Voters always get the full period; they never get less
+    because of when someone clicked Merge.
+
+    label is built by hand rather than with %-I/%p so it renders identically on
+    macOS and on the Linux runner."""
     cfg = config or load_config(root)
     n = cadence_days(root, cfg)
 
@@ -224,12 +240,28 @@ def compute_deadline(posted_at, root=None, config=None):
         except ValueError:
             halt(f"posted_at is not an ISO datetime: {posted_at!r}")
 
-    deadline = dt + timedelta(days=n)
+    earliest = dt + timedelta(days=n)      # never close voting before this
+    deadline = earliest
+    snapped = False
+
+    if snap and cfg.get("post_time_local"):
+        try:
+            hh, mm = [int(x) for x in str(cfg["post_time_local"]).split(":")]
+            if not (0 <= hh <= 23 and 0 <= mm <= 59):
+                raise ValueError
+        except ValueError:
+            halt(f"config.post_time_local is not HH:MM: {cfg['post_time_local']!r}")
+        deadline = earliest.replace(hour=hh, minute=mm, second=0, microsecond=0)
+        while deadline < earliest:         # never shorten the voting window
+            deadline += timedelta(days=1)
+        snapped = True
+
     hour12 = deadline.hour % 12 or 12
     ampm = "AM" if deadline.hour < 12 else "PM"
     minute = "" if deadline.minute == 0 else f":{deadline.minute:02d}"
     label = f"{deadline:%a}".upper() + f" {hour12}{minute}{ampm}"
-    return {"iso": deadline.isoformat(), "label": label, "days": n}
+    return {"iso": deadline.isoformat(), "label": label, "days": n,
+            "snapped": snapped}
 
 
 def next_round_number(root=None):

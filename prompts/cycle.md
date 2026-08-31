@@ -123,6 +123,13 @@ It validates the PNG is really 1080×1080 and raises `RenderError` otherwise.
 Colour law (G9): orange = a fight is live; charcoal+gold = results are in. Never
 recolour across that boundary.
 
+> **Preview vs shipped card.** In review phase the DEADLINE slot is staged as the
+> literal placeholder `SET ON POST`, never a real date. The card that actually
+> ships is re-rendered at merge time by `scripts/publish_staged.py`, which
+> recomputes the deadline then (G3) and refuses to post if any slot other than
+> DEADLINE changed. A staged card reviewed today and merged Thursday must not
+> claim Monday's deadline.
+
 ### 8a. DECIDE THE GATE, then write the breadcrumb
 ```
 post_for_real = config.auto_publish is True
@@ -154,8 +161,26 @@ The FB post-id capture is deterministic (poll Blotato's status endpoint, parse
 4. Move the PNG `queue/ → published/`.
 5. **Delete `queue/PENDING_POST.json` LAST** — only once everything above succeeded.
 
-**If staged:** write the proposed state into `queue/` only. No `posted_at`, no canon
-append, no `used: true` — none of it happened yet. The PR merge promotes it.
+**If staged:** write these into `queue/` and nothing else. No `posted_at`, no canon
+append, no `used: true` — none of it has happened yet.
+
+| File | Contents |
+|---|---|
+| `round_<N>_slots.json` | the exact slot dict, with `DEADLINE: "SET ON POST"` |
+| `round_<N>_caption.tmpl` | the caption with a literal `{{DEADLINE}}` placeholder |
+| `round_<N>.png` | preview render of those slots — shows `SET ON POST` |
+| `current_round.proposed.json` | proposed state; `fb_post_id`/`posted_at` both `null` |
+| `round_<N>_canon.json` | the PREVIOUS round's result to append on publish. **Omit on Round 1.** |
+
+Stage the **inputs**, not just the output. `scripts/publish_staged.py` re-renders
+from `slots.json` at merge time with the real deadline, and asserts that only
+`DEADLINE` differs — that is what makes "what I reviewed is what ships" mechanical
+rather than a promise. A baked-in deadline would be a G3 violation the moment the
+merge is delayed.
+
+Merging the PR lands these on `main`; that push fires `publish-staged.yml`, which
+runs P0–P10 (guard, reconcile, recompute deadline, re-render, prove-only-DEADLINE,
+push breadcrumb, post, write state, clear queue).
 
 ---
 
